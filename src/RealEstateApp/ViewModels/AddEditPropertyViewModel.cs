@@ -25,6 +25,20 @@ namespace RealEstateApp.ViewModels
         public ICommand SaveCommand => new Command(SaveAsync);
         public ICommand CancelCommand => new Command(CancelAsync);
         public ICommand GetCurrentAspectCommand => new Command(GetCurrentAspectAsync);
+        public ICommand GetLocationCommand => new Command(GetLocationAsync);
+
+        private async void GetLocationAsync(object obj)
+        {
+            var geolocationRequest =  new GeolocationRequest(GeolocationAccuracy.Best);
+
+            var geolocation = await Geolocation.GetLocationAsync(geolocationRequest);
+
+            Property.Longitude = geolocation.Longitude;
+            Property.Latitude = geolocation.Latitude;
+
+            OnPropertyChanged();
+
+        }
 
         private async void GetCurrentAspectAsync()
         {

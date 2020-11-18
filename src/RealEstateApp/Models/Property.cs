@@ -24,8 +24,6 @@ namespace RealEstateApp.Models
         public string AgentId { get; set; }
         public List<string> ImageUrls { get; set; }
         public PanoramaImage PanoramaImage { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
         public string Aspect { get; set; }
         public string NeighbourhoodUrl { get; set; }
         public string ContractFilePath { get; set; }
@@ -33,5 +31,9 @@ namespace RealEstateApp.Models
         public Vendor Vendor { get; set; }
 
         public string MainImageUrl => ImageUrls?.FirstOrDefault() ?? GlobalSettings.Instance.NoImageUrl;
+
+        //Used for Geolocation
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

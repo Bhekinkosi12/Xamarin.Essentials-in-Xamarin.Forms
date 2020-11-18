@@ -35,6 +35,19 @@
                         Text="&#xf14e; Aspect" />
                     <Grid HorizontalOptions="FillAndExpand">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding Property.Latitude}"
+                               VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <Label Grid.Column="1" Text="{Binding Property.Longitude}"
+                               VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <Button Grid.Column="2" Text="&#xf568;" Style="{StaticResource IconFont}"
+                               Command="{Binding GetLocationCommand}"/>
+                    </Grid>
+                    <Grid HorizontalOptions="FillAndExpand">
+                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
