@@ -205,6 +205,7 @@ namespace RealEstateApp.ViewModels
 
         private void CancelAsync()
         {
+            Vibration.Cancel();
             NavigationService.PopModalAsync();
         }
 
@@ -214,6 +215,9 @@ namespace RealEstateApp.ViewModels
             {
                 StatusMessage = "Please fill in all required fields";
                 StatusColor = Color.Red;
+
+                Vibration.Vibrate(5000);
+
                 return false;
             }
 
