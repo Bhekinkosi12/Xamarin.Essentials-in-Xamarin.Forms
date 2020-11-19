@@ -29,9 +29,44 @@ namespace RealEstateApp.ViewModels
         public ICommand GetGeocodeCommand => new Command(GetGeocodAsync);
         public bool IsOnline => Connectivity.NetworkAccess == NetworkAccess.Internet;
 
+        public void CheckBateryStatus()
+        {
+            if (Battery.ChargeLevel < 0.2)
+            {
+                StatusMessage = "Battery is low";
+                if (Battery.State != BatteryState.Charging)
+                {
+                    StatusColor = Color.Red;
+                }
+                else
+                {
+                    StatusColor = Color.Yellow;
+                }
+            }
+            else
+            {
+                StatusMessage = null;
+            }
+
+            OnPropertyChanged(nameof(StatusMessage));
+        }
+
         public override void OnAppearing()
         {
             Connectivity.ConnectivityChanged += OnConnectivityChanged;
+
+            Battery.BatteryInfoChanged += OnBatteryInfoChange;
+            Battery.EnergySaverStatusChanged += OnEnergySaverStatusChanged;
+        }
+
+        private void OnEnergySaverStatusChanged(object sender, EnergySaverStatusChangedEventArgs e)
+        {
+            CheckBateryStatus();
+        }
+
+        private void OnBatteryInfoChange(object sender, BatteryInfoChangedEventArgs e)
+        {
+            CheckBateryStatus();
         }
 
         private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -39,9 +74,13 @@ namespace RealEstateApp.ViewModels
             OnPropertyChanged(nameof(IsOnline));
         }
 
+        
         public override void OnDisappearing()
         {
-            Connectivity.ConnectivityChanged += OnConnectivityChanged;
+            //UnSubscribe to avoid memory problems
+            Connectivity.ConnectivityChanged -= OnConnectivityChanged;
+            Battery.BatteryInfoChanged -= OnBatteryInfoChange;
+            Battery.EnergySaverStatusChanged -= OnEnergySaverStatusChanged;
         }
 
 
