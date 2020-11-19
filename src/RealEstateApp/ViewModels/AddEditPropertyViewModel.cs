@@ -29,6 +29,22 @@ namespace RealEstateApp.ViewModels
         public ICommand GetGeocodeCommand => new Command(GetGeocodAsync);
         public bool IsOnline => Connectivity.NetworkAccess == NetworkAccess.Internet;
 
+        public override void OnAppearing()
+        {
+            Connectivity.ConnectivityChanged += OnConnectivityChanged;
+        }
+
+        private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(IsOnline));
+        }
+
+        public override void OnDisappearing()
+        {
+            Connectivity.ConnectivityChanged += OnConnectivityChanged;
+        }
+
+
         private async void GetGeocodAsync(object obj)
         {
             if (string.IsNullOrWhiteSpace(Property.Address))
@@ -85,13 +101,7 @@ namespace RealEstateApp.ViewModels
             }
         }
         
-        public override void OnAppearing()
-        {
-        }
 
-        public override void OnDisappearing()
-        {
-        }
 
         private Property _property;
 
