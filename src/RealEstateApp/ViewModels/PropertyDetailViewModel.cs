@@ -24,6 +24,30 @@ namespace RealEstateApp.ViewModels
         public ICommand ViewPanoramaCommand => 
             new Command(async () => await NavigationService.NavigateToModalAsync<PanoramaViewModel>(Property));
 
+        public ICommand CancelSpeachCommand => new Command(CancelSpeachAsync);
+        public ICommand SpeachCommand => new Command(SpeachDescriptorAsync);
+
+        private CancellationTokenSource _cancelSpeachCancelationToken;
+
+        private async void CancelSpeachAsync()
+        {
+            if (_cancelSpeachCancelationToken?.IsCancellationRequested  ?? true)
+            {
+                return;
+            }
+
+            _cancelSpeachCancelationToken.Cancel();
+            IsSpeaking = false;
+        }
+
+        private async void SpeachDescriptorAsync()
+        {
+            _cancelSpeachCancelationToken = new CancellationTokenSource();
+
+            await TextToSpeech.SpeakAsync(Property.Description, _cancelSpeachCancelationToken.Token);
+            IsSpeaking = true;
+        }
+
         public override void OnAppearing()
         {
         }
@@ -42,6 +66,15 @@ namespace RealEstateApp.ViewModels
                 .Where(x => x.Id == Property.Id)
                 .Subscribe(x => Property = x);
         }
+
+        private bool _isSpecking;
+
+        public bool IsSpeaking
+        {
+            get { return _isSpecking; }
+            set { _isSpecking = value; }
+        }
+
 
         private Agent _agent;
 
