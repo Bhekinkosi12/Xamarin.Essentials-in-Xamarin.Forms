@@ -27,6 +27,7 @@ namespace RealEstateApp.ViewModels
         public ICommand GetCurrentAspectCommand => new Command(GetCurrentAspectAsync);
         public ICommand GetLocationCommand => new Command(GetLocationAsync);
         public ICommand GetGeocodeCommand => new Command(GetGeocodAsync);
+        public bool IsOnline => Connectivity.NetworkAccess == NetworkAccess.Internet;
 
         private async void GetGeocodAsync(object obj)
         {
@@ -34,6 +35,11 @@ namespace RealEstateApp.ViewModels
             {
                 await DialogService.ShowAlertAsync("Please enter an address", "No address");
                 return;
+            }
+
+            if (IsOnline == false)
+            {
+                await DialogService.ShowAlertAsync("You must be online to use geocoding", "Ofline");
             }
 
             var locations = await Geocoding.GetLocationsAsync(Property.Address);
