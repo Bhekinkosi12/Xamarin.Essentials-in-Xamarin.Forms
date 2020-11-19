@@ -45,6 +45,8 @@
                                VerticalOptions="Center" HorizontalOptions="Center"/>
                         <Button Grid.Column="2" Text="&#xf568;" Style="{StaticResource IconFont}"
                                Command="{Binding GetLocationCommand}"/>
+                        <Button Grid.Column="3" Text="&#xf568;" Style="{StaticResource IconFont}"
+                               Command="{Binding GetGeocodeCommand}"/>
                     </Grid>
                     <Grid HorizontalOptions="FillAndExpand">
                         <Grid.ColumnDefinitions>

@@ -26,6 +26,24 @@ namespace RealEstateApp.ViewModels
         public ICommand CancelCommand => new Command(CancelAsync);
         public ICommand GetCurrentAspectCommand => new Command(GetCurrentAspectAsync);
         public ICommand GetLocationCommand => new Command(GetLocationAsync);
+        public ICommand GetGeocodeCommand => new Command(GetGeocodAsync);
+
+        private async void GetGeocodAsync(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(Property.Address))
+            {
+                await DialogService.ShowAlertAsync("Please enter an address", "No address");
+                return;
+            }
+
+            var locations = await Geocoding.GetLocationsAsync(Property.Address);
+            var location = locations.FirstOrDefault();
+            if (location != null)
+            {
+                Property.Longitude = location.Longitude;
+                Property.Latitude = location.Latitude;
+            }
+        }
 
         private async void GetLocationAsync(object obj)
         {
@@ -36,6 +54,16 @@ namespace RealEstateApp.ViewModels
             Property.Longitude = geolocation.Longitude;
             Property.Latitude = geolocation.Latitude;
 
+            var geocoding = await Geocoding.GetPlacemarksAsync(geolocation);
+            var geocodingAddress = geocoding.FirstOrDefault();
+
+            if (geocodingAddress != null)
+            {
+                Property.Address = $"{geocodingAddress.AdminArea} ," +
+                    $"{geocodingAddress.CountryName} ," +
+                    $"{geocodingAddress.Locality} ,{geocodingAddress.PostalCode}";
+            }
+          
             OnPropertyChanged();
 
         }
