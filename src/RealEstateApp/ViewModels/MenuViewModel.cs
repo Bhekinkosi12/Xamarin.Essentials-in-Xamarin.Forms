@@ -24,6 +24,8 @@ namespace RealEstateApp.ViewModels
         }
 
         public ICommand ItemSelectedCommand => new Command<MenuItem>(SelectMenuItemAsync);
+        public ICommand TurnOnFlashLight => new Command( () => ToggleFlashlight(true));
+        public ICommand TurnOffFlashLight => new Command( () => ToggleFlashlight(false));
 
         private static ObservableCollection<MenuItem> _menuItems = new ObservableCollection<MenuItem>();
 
@@ -39,6 +41,27 @@ namespace RealEstateApp.ViewModels
         {
             get => _loggedInUser;
             set => SetProperty(ref _loggedInUser, value);
+        }
+
+        public async void ToggleFlashlight(bool on)
+        {
+            try
+            {
+                if (on)
+                {
+                    await Flashlight.TurnOnAsync();
+                }
+                else
+                {
+                    await Flashlight.TurnOffAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                await DialogService.ShowAlertAsync($"Flashlight not working - {ex.Message}", "Flashlight");
+            }
+          
         }
 
         public static bool IsMenuItem(Type viewModelType)
