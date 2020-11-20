@@ -15,12 +15,44 @@ namespace RealEstateApp.ViewModels
 
         public override void OnAppearing()
         {
+            Compass.ReadingChanged += OnReadingChange;
 
+            if (Compass.IsMonitoring == false)
+            {
+                Compass.Start(SensorSpeed.UI,true);
+            }
+        }
+
+        private void OnReadingChange(object sender, CompassChangedEventArgs e)
+        {
+            CurrentHeading = e.Reading.HeadingMagneticNorth;
+            Rotation = CurrentHeading * -1;
+
+            var closest90 = Math.Round(CurrentHeading / 90d, MidpointRounding.AwayFromZero) * 90;
+            switch (closest90)
+            {
+                case 0:
+                case 360:
+                    CurrentAspect = "North";
+                    break;
+                case 90:
+                    CurrentAspect = "East";
+                    break;
+                case 180:
+                    CurrentAspect = "South";
+                    break;
+                case 270:
+                    CurrentAspect = "West";
+                    break;
+                default:
+                    break;
+            }
         }
 
         public override void OnDisappearing()
         {
-
+            Compass.ReadingChanged -= OnReadingChange;
+            Compass.Stop();
         }
 
         private string _currentAspect;
