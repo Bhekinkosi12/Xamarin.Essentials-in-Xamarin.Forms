@@ -106,15 +106,14 @@
                 Grid.Row="4"
                 FontSize="14"
                 Text="{Binding Property.LandSize, StringFormat='Land size: {0} &#x33a1;'}" />
-           
-            <StackLayout Grid.Row="5" Orientation="Horizontal" IsVisible="False">
+            <StackLayout Grid.Row="5" Orientation="Horizontal">
                 <Label 
                 Margin="0,20,0,0"
                 FontAttributes="Bold"
                 FontSize="14"
                 VerticalOptions="Start"
                 Text="Description:" />
-                <Button Text="&#xf04d;" 
+                <Button Text="&#xf002;" 
                         Style="{StaticResource IconFont}" 
                         Command="{Binding SpeachCommand}"
                         IsVisible="{Binding IsSpeaking, Converter={converters:InverseBoolConverter}}"

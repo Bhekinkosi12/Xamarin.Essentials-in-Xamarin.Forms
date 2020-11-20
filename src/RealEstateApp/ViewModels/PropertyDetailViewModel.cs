@@ -37,15 +37,15 @@ namespace RealEstateApp.ViewModels
             }
 
             _cancelSpeachCancelationToken.Cancel();
-            IsSpeaking = false;
+            
         }
 
         private async void SpeachDescriptorAsync()
         {
             _cancelSpeachCancelationToken = new CancellationTokenSource();
-
-            await TextToSpeech.SpeakAsync(Property.Description, _cancelSpeachCancelationToken.Token);
             IsSpeaking = true;
+            await TextToSpeech.SpeakAsync(Property.Description, _cancelSpeachCancelationToken.Token);
+            IsSpeaking = false;
         }
 
         public override void OnAppearing()
@@ -72,7 +72,7 @@ namespace RealEstateApp.ViewModels
         public bool IsSpeaking
         {
             get { return _isSpecking; }
-            set { _isSpecking = value; }
+            set => SetProperty(ref _isSpecking, value);
         }
 
 
