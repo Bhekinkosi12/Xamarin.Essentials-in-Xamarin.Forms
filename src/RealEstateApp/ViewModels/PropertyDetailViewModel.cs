@@ -27,7 +27,9 @@ namespace RealEstateApp.ViewModels
         public ICommand CancelSpeachCommand => new Command(CancelSpeachAsync);
         public ICommand SpeachCommand => new Command(SpeachDescriptorAsync);
 
+
         private CancellationTokenSource _cancelSpeachCancelationToken;
+        public ObservableCollection<Locale> LocalesCollection { get; set; } = new ObservableCollection<Locale>();
 
         private async void CancelSpeachAsync()
         {
@@ -44,7 +46,14 @@ namespace RealEstateApp.ViewModels
         {
             _cancelSpeachCancelationToken = new CancellationTokenSource();
             IsSpeaking = true;
-            await TextToSpeech.SpeakAsync(Property.Description, _cancelSpeachCancelationToken.Token);
+            var options = new SpeechOptions()
+            {
+                Locale = this.SelectLocale,
+                Volume = this.SelectVolume,
+                Pitch = this.SelectPitch
+            };
+
+            await TextToSpeech.SpeakAsync(Property.Description,options, _cancelSpeachCancelationToken.Token);
             IsSpeaking = false;
         }
 
@@ -65,7 +74,38 @@ namespace RealEstateApp.ViewModels
             Repository.ObservePropertySaved()
                 .Where(x => x.Id == Property.Id)
                 .Subscribe(x => Property = x);
+
+          
+            var locales = await TextToSpeech.GetLocalesAsync();
+            LocalesCollection = new ObservableCollection<Locale>(locales);
+            OnPropertyChanged(nameof(LocalesCollection));
+
         }
+
+        private Locale _selectLocale;
+
+        public Locale SelectLocale
+        {
+            get { return _selectLocale; }
+            set => SetProperty(ref _selectLocale, value);
+        }
+
+        private float _selectVolume = 1;
+
+        public float SelectVolume
+        {
+            get { return _selectVolume; }
+            set => SetProperty(ref _selectVolume, value);
+        }
+
+        private float _selectPitch =1;
+
+        public float SelectPitch
+        {
+            get { return _selectPitch; }
+            set => SetProperty(ref _selectPitch, value);
+        }
+
 
         private bool _isSpecking;
 
@@ -74,6 +114,9 @@ namespace RealEstateApp.ViewModels
             get { return _isSpecking; }
             set => SetProperty(ref _isSpecking, value);
         }
+
+
+
 
 
         private Agent _agent;

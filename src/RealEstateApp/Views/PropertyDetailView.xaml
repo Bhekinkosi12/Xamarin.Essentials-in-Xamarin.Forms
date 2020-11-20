@@ -117,13 +117,35 @@
                         Style="{StaticResource IconFont}" 
                         Command="{Binding SpeachCommand}"
                         IsVisible="{Binding IsSpeaking, Converter={converters:InverseBoolConverter}}"
-                        />
+                        >
+
+                    <Button.Behaviors>
+                        <behaviors:LongPressBehavior Command="{Binding ToggleAdvancedSpeechCommand}"/>
+                    </Button.Behaviors>
+                </Button>
                 <Button Text="&#xf04d;" 
                         Style="{StaticResource IconFont}" 
                         Command="{Binding CancelSpeachCommand}"
                         IsVisible="{Binding IsSpeaking}"
                         />
-            </StackLayout>            
+            </StackLayout>
+            <Grid Grid.Row="6" IsVisible="{Binding ShowAdvancedSpeechControls}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Text="Pitch"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="Volume"/>
+                <Label Grid.Row="2" Grid.Column="0" Text="Locale" VerticalOptions="Center"/>
+                <Slider Grid.Row="0" Grid.Column="1" Value="{Binding SelectPitch}" Maximum="2"/>
+                <Slider Grid.Row="1" Grid.Column="1" Value="{Binding SelectVolume}" Maximum="1"/>
+                <Picker Grid.Row="2" Grid.Column="1" ItemsSource="{Binding LocalesCollection}" SelectedItem="{Binding SelectLocale}" ItemDisplayBinding="{Binding Name}" FontSize="Small"/>
+            </Grid>
             <Label
                 Grid.Row="8"
                 Margin="0,0,0,20"
