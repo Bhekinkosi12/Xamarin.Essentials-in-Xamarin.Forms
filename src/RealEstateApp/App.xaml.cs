@@ -23,7 +23,10 @@ namespace RealEstateApp
             InitNavigation();
         }
 
+        [Obsolete]
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         protected override async void OnStart()
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
         {
             VersionTracking.Track();
 

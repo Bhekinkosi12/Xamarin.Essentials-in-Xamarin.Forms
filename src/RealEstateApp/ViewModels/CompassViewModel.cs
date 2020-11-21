@@ -7,19 +7,44 @@ using Xamarin.Essentials;
 
 namespace RealEstateApp.ViewModels
 {
+    public interface ICompassSensor
+    {
+        void Start(SensorSpeed sensorSpeed, bool applyLowPassFilter);
+
+        void Stop();
+
+        bool IsMonitoring { get; }
+
+        event EventHandler<CompassChangedEventArgs> ReadingChanged;
+    }
+    public class CompassSensorImplementation : ICompassSensor
+    {
+        public void Start(SensorSpeed sensorSpeed, bool applyLowPassFilter) => Compass.Start(sensorSpeed, applyLowPassFilter);
+
+        public void Stop() => Compass.Stop();
+
+        public bool IsMonitoring => Compass.IsMonitoring;
+
+        public event EventHandler<CompassChangedEventArgs> ReadingChanged
+        {
+            add => Compass.ReadingChanged += value;
+            remove => Compass.ReadingChanged -= value;
+        }
+    }
     public class CompassViewModel : ViewModelBase
     {
-        public CompassViewModel()
+        public CompassViewModel(ICompassSensor compassSensor)
         {
+            _compassSensor = compassSensor;
         }
 
         public override void OnAppearing()
         {
-            Compass.ReadingChanged += OnReadingChange;
+            _compassSensor.ReadingChanged += OnReadingChange;
 
-            if (Compass.IsMonitoring == false)
+            if (_compassSensor.IsMonitoring == false)
             {
-                Compass.Start(SensorSpeed.UI,true);
+                _compassSensor.Start(SensorSpeed.UI,true);
             }
         }
 
@@ -51,8 +76,8 @@ namespace RealEstateApp.ViewModels
 
         public override void OnDisappearing()
         {
-            Compass.ReadingChanged -= OnReadingChange;
-            Compass.Stop();
+            _compassSensor.ReadingChanged -= OnReadingChange;
+            _compassSensor.Stop();
         }
 
         private string _currentAspect;
@@ -87,6 +112,7 @@ namespace RealEstateApp.ViewModels
         }
 
         private TaskCompletionSource<string> _getAspectTask;
+        private readonly ICompassSensor _compassSensor;
 
         private void Close(bool cancel)
         {
