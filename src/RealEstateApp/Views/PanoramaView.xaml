@@ -12,12 +12,12 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding CloseCommand}" Text="Close" />
     </ContentPage.ToolbarItems>
-    
+
     <StackLayout Orientation="Vertical">
-        
+
         <Label Text="{Binding Orientation, StringFormat='Orientation Q: {0}', Converter={converters:QuaternionConverter}}" HorizontalOptions="Center" 
                BackgroundColor="White" LineBreakMode="WordWrap"  FontSize="Small"  />
-        
+
         <AbsoluteLayout 
             VerticalOptions="FillAndExpand" 
             HorizontalOptions="FillAndExpand" 
