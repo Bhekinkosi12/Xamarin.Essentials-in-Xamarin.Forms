@@ -10,9 +10,12 @@ namespace RealEstateApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            global::Xamarin.Essentials.Platform = 
+            
 
-            LoadApplication(new App());
+            var platformSpecificColor = UIKit.UIColor.Red;
+            var systemColor = platformSpecificColor.ToSystemColor();
+
+            LoadApplication(new App(systemColor));
 
             return base.FinishedLaunching(app, options);
         }

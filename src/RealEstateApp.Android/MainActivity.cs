@@ -22,8 +22,10 @@ namespace RealEstateApp.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
+            var platformSpecificColor = Android.Graphics.Color.Green;
+            var systemColor = platformSpecificColor.ToSystemColor();
 
-            LoadApplication(new App());
+            LoadApplication(new App(systemColor));
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
