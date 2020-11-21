@@ -106,46 +106,82 @@
                 Grid.Row="4"
                 FontSize="14"
                 Text="{Binding Property.LandSize, StringFormat='Land size: {0} &#x33a1;'}" />
-            <StackLayout Grid.Row="5" Orientation="Horizontal">
-                <Label 
-                Margin="0,20,0,0"
+            <StackLayout Grid.Row="5">
+                <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start" VerticalOptions="Start" 
+                            HorizontalOptions="Start" AlignContent="Start">
+                    <Button Command="{Binding OpenMapsCommand}"
+                        CommandParameter="{x:Static essentials:NavigationMode.None}" Text="&#xf5a0;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding OpenMapsCommand}"
+                        CommandParameter="{x:Static essentials:NavigationMode.Default}"
+                        Text="&#xf5eb;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52"/>
+                    <Button Command="{Binding SpeakDescriptionCommand}" 
+                        Text="&#xf04b;" Style="{StaticResource IconFont}"
+                        IsVisible="{Binding IsSpeaking, Converter={converters:InverseBoolConverter}}"
+                        FontSize="Large" WidthRequest="52" HeightRequest="52">
+                        <Button.Behaviors>
+                            <behaviors:LongPressBehavior Command="{Binding ToggleAdvancedSpeechCommand}" />
+                        </Button.Behaviors>
+                    </Button>
+                    <Button Command="{Binding CancelSpeechCommand}"
+                        Text="&#xf04d;"                                 
+                        IsVisible="{Binding IsSpeaking}"
+                        Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" x:Name="btnCancel"/>
+                    <Button Command="{Binding OpenBrowserCommand}"
+                        CommandParameter="{x:Static essentials:BrowserLaunchMode.SystemPreferred}" 
+                        Text="&#xf0c1;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding OpenBrowserCommand}"
+                        CommandParameter="{x:Static essentials:BrowserLaunchMode.External}" 
+                        Text="&#xf35d;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding OpenUberCommand}"
+                        IsVisible="{Binding OpenUberCommand, Converter={converters:NullToBoolConverter}}"
+                        Text="&#xf1ba;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding OpenFileCommand}"
+                        Text="&#xf573;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding ShareTextCommand}"
+                        Text="&#xf1e0;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+                    <Button Command="{Binding ShareFileCommand}"
+                        Text="&#xf14d;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+
+                    <Button Command="{Binding CopyToClipboardCommand}"
+                        Text="&#xf328;" Style="{StaticResource IconFont}" 
+                        FontSize="Large" WidthRequest="52" HeightRequest="52" />
+
+                </FlexLayout>
+            </StackLayout>
+            <Grid Grid.Row="6" IsVisible="{Binding ShowAdvancedSpeechControls}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Text="Pitch" />
+                <Label Grid.Row="1" Grid.Column="0" Text="Volume"  />
+                <Label Grid.Row="2" Grid.Column="0" Text="Locale" VerticalOptions="Center" />
+                <Slider Grid.Row="0" Grid.Column="1" Value="{Binding SelectedPitch}" Maximum="2" />
+                <Slider Grid.Row="1" Grid.Column="1" Value="{Binding SelectedVolume}" Maximum="1" />
+                <Picker Grid.Row="2" Grid.Column="1" FontSize="Small" 
+                        ItemsSource="{Binding LocalesCollection}" SelectedItem="{Binding SelectedLocale}" ItemDisplayBinding="{Binding Name}" />
+            </Grid>
+            <StackLayout Grid.Row="7" Orientation="Horizontal">
+                <Label
                 FontAttributes="Bold"
                 FontSize="14"
                 VerticalOptions="Start"
                 Text="Description:" />
-                <Button Text="&#xf002;" 
-                        Style="{StaticResource IconFont}" 
-                        Command="{Binding SpeachCommand}"
-                        IsVisible="{Binding IsSpeaking, Converter={converters:InverseBoolConverter}}"
-                        >
-
-                    <Button.Behaviors>
-                        <behaviors:LongPressBehavior Command="{Binding ToggleAdvancedSpeechCommand}"/>
-                    </Button.Behaviors>
-                </Button>
-                <Button Text="&#xf04d;" 
-                        Style="{StaticResource IconFont}" 
-                        Command="{Binding CancelSpeachCommand}"
-                        IsVisible="{Binding IsSpeaking}"
-                        />
             </StackLayout>
-            <Grid Grid.Row="6" IsVisible="{Binding ShowAdvancedSpeechControls}">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Text="Pitch"/>
-                <Label Grid.Row="1" Grid.Column="0" Text="Volume"/>
-                <Label Grid.Row="2" Grid.Column="0" Text="Locale" VerticalOptions="Center"/>
-                <Slider Grid.Row="0" Grid.Column="1" Value="{Binding SelectPitch}" Maximum="2"/>
-                <Slider Grid.Row="1" Grid.Column="1" Value="{Binding SelectVolume}" Maximum="1"/>
-                <Picker Grid.Row="2" Grid.Column="1" ItemsSource="{Binding LocalesCollection}" SelectedItem="{Binding SelectLocale}" ItemDisplayBinding="{Binding Name}" FontSize="Small"/>
-            </Grid>
             <Label
                 Grid.Row="8"
                 Margin="0,0,0,20"
@@ -170,7 +206,7 @@
                 <Label Grid.Column="0" Grid.Row="0" Style="{StaticResource IconFont}" VerticalTextAlignment="Center" Text="&#xf2bd;"/>
                 <Label Grid.Column="0" Grid.Row="1" Style="{StaticResource IconFont}" VerticalTextAlignment="Center" Text="&#xf0e0;"/>
                 <Label Grid.Column="0" Grid.Row="2" Style="{StaticResource IconFont}" VerticalTextAlignment="Center" Text="&#xf095;"/>
-                
+
                 <Label Text="{Binding Property.Vendor.FullName}"
                         Grid.Row="0" Grid.Column="1"
                         FontAttributes="Bold" VerticalTextAlignment="Center"
@@ -178,12 +214,25 @@
 
                 <Label Text="{Binding Property.Vendor.Phone}"
                         Grid.Row="2" Grid.Column="1"
-                        FontSize="12" VerticalTextAlignment="Center">
+                        FontSize="12" VerticalTextAlignment="Center"
+                        TextColor="Blue"
+                        TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer 
+                            Command="{Binding PhoneCommand}" 
+                            CommandParameter="{Binding Property.Vendor}" />
+                    </Label.GestureRecognizers>
                 </Label>
 
                 <Label Text="{Binding Property.Vendor.Email}"
                         Grid.Row="1" Grid.Column="1" FontSize="12" 
-                       VerticalTextAlignment="Center">
+                       VerticalTextAlignment="Center"
+                       TextColor="Blue" TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{Binding SendEmailCommand}"
+                            CommandParameter="{Binding Property.Vendor}" />
+                    </Label.GestureRecognizers>
                 </Label>
             </Grid>
             <Label
