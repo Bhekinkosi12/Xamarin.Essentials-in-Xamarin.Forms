@@ -21,7 +21,19 @@ namespace RealEstateApp.ViewModels
         public ICommand PropertySelectedCommand => new Command<PropertyListItemViewModel>(SelectPropertyAsync);
         public ICommand AddPropertyCommand => new Command(AddPropertyAsync);
         public ICommand LoadItemsCommand => new Command(LoadProperties);
-        
+        public ICommand SortCommand => new Command(SortAsync);
+        private Location _currentLocation;
+
+        private async void SortAsync()
+        {
+            _currentLocation = await Geolocation.GetLastKnownLocationAsync();
+            if (_currentLocation == null)
+            {
+                _currentLocation = await Geolocation.GetLocationAsync();
+            }
+            LoadProperties();
+        }
+
         private void LoadProperties()
         {
             if (IsBusy)
@@ -34,15 +46,19 @@ namespace RealEstateApp.ViewModels
             try
             {
                 var properties = Repository.GetProperties();
-                var items = new List<PropertyListItemViewModel>();                
+                var items = new List<PropertyListItemViewModel>();
 
-                foreach(var property in properties)
+                foreach (var property in properties)
                 {
                     var item = new PropertyListItemViewModel(property);
+                    if (_currentLocation != null)
+                    {
+                        item.DistanceInKilometres = _currentLocation.CalculateDistance(property.Latitude, property.Longitude, DistanceUnits.Kilometers);
+                    }
                     items.Add(item);
                 }
 
-                foreach(var item in items)
+                foreach (var item in items.OrderBy(x => x.DistanceInKilometres))
                 {
                     PropertiesCollection.Add(item);
                 }
@@ -71,6 +87,6 @@ namespace RealEstateApp.ViewModels
 
             Repository.ObservePropertySaved()
                 .Subscribe(x => LoadProperties());
-        }        
+        }
     }
 }
